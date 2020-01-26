@@ -12,7 +12,7 @@ let obj = {
     },
 
     getItems() {
-        console.log(this.items);
+        return this.items;
     }
 };
 
@@ -26,9 +26,10 @@ const basket = new Basket();
 
 basket.addItem('firstItem');
 basket.addItem('secondItem');
-basket.getItems();
+console.log(basket.getItems());
 basket.removeItem('firstItem');
-basket.getItems();
+console.log(basket.getItems());
+
 
 
 
@@ -73,82 +74,111 @@ basket.getItems();
 
 // Реализовать цепочку протитопов с помощью функций конструкторов.
 
-let objA = {
-    animalFood1: 'Deer, moose, wild boar',
-    animalFood2: 'Small mammals, birds, reptiles, frogs, eggs, insects',
-    animalFood3: 'Nuts, fruits, seeds and flowers',
+function AnimalFood() {
+    // Так почему-то не работает!
+    
+    // this.setFood = function(food) {
+    //     this.animalData.food = food;
+    // }
 
-    setFood(food) {
-        this.animalItems.food = food;
-    },
+    // this.getFood = function() {
+    //     return this.animalData.food;
+    // }   
+}   
 
-    getFood() {
-        console.log(this.animalItems.food);
-    }
-};
+function AnimalName() {
+    // Так почему-то не работает!
 
-let objB = {
-    animalName1: 'Monkey',
-    animalName2: 'Fox',
-    animalName3: 'Wolf',
+    // this.setName = function(name) {
+    //     this.animalData.name = name;
+    // }
 
-    setName(name) {
-        this.animalItems.name = name;
-    },
-
-    getName() {
-        console.log(this.animalItems.name);
-    },
-
-};
-
-let objC = {
-
-    currentAnimalItems() {
-        console.log(this.animalItems);
-    },
-
-    deleteAnimalItem(item) {
-        if (item === name) {
-            delete this.animalItems.name;
-        } else if (item === food) {
-            delete this.animalItems.food;
-        }
-    }
-
-};
-
-function Animal() {
-    this.animalItems = {};
+    // this.getName = function() {
+    //     return this.animalData.name;
+    // }
 }
 
-Animal.prototype = objC;
-objC.__proto__ = objB;
-objB.__proto__ = objA;
+function AnimalItems() {
+    // Так почему-то не работает!
+
+    // this.currentAnimalItems = function() {
+    //     return this.animalData;
+    // }
+    
+    // this.deleteAnimalItem = function(item) {
+    //     if (item === name) {
+    //         delete this.animalData.name;
+    //     } else if (item === food) {
+    //         delete this.animalData.food;
+    //     }
+    // }
+    
+}
+
+function Animal() {
+    this.animalData = {};
+}
+
+
+AnimalFood.prototype.setFood = function(food) {
+    this.animalData.food = food;
+}
+AnimalFood.prototype.getFood= function() {
+    return this.animalData.food;
+}
+AnimalFood.prototype.constructor = AnimalFood;
+
+
+AnimalName.prototype = Object.create(AnimalFood.prototype);
+AnimalName.prototype.setName = function(name) {
+    this.animalData.name = name;
+}
+AnimalName.prototype.getName = function() {
+    return this.animalData.name;
+}
+AnimalName.prototype.constructor = AnimalName;
+
+
+AnimalItems.prototype = Object.create(AnimalName.prototype);
+AnimalItems.prototype.currentAnimalItems = function() {
+    return this.animalData;
+}
+AnimalItems.prototype.deleteAnimalItem = function(item) {
+    if (item === name) {
+        delete this.animalData.name;
+    } else if (item === food) {
+        delete this.animalData.food;
+    }
+}
+AnimalItems.prototype.constructor = AnimalItems;
+
+
+Animal.prototype = Object.create(AnimalItems.prototype);
+Animal.prototype.constructor = Animal;
 
 let fox = new Animal();
 let wolf = new Animal();
 let monkey = new Animal();
 
-wolf.setName(fox.animalName3);
-fox.setName(fox.animalName2);
-monkey.setName(fox.animalName1);
+wolf.setName('wolf');
+fox.setName('fox');
+monkey.setName('monkey');
 
-wolf.getName();
-fox.getName();
-monkey.getName();
+console.log(wolf.getName());
+console.log(fox.getName());
+console.log(monkey.getName());
 
-wolf.setFood(wolf.animalFood1); 
-fox.setFood(wolf.animalFood2);
-monkey.setFood(wolf.animalFood3);
+wolf.setFood('Deer, moose, wild boar'); 
+fox.setFood('Small mammals, birds, reptiles, frogs, eggs, insects');
+monkey.setFood('Nuts, fruits, seeds and flowers');
 
-wolf.getFood();
-fox.getFood();
-monkey.getFood();
+console.log(wolf.getFood());
+console.log(fox.getFood());
+console.log(monkey.getFood());
 
-wolf.currentAnimalItems();
-fox.currentAnimalItems();
-monkey.currentAnimalItems();
+console.log(wolf.currentAnimalItems());
+console.log(fox.currentAnimalItems());
+console.log(monkey.currentAnimalItems());
 
 wolf.deleteAnimalItem(name);
-wolf.currentAnimalItems();
+console.log(wolf.currentAnimalItems());

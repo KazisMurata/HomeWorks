@@ -41,129 +41,91 @@
 
 
 class Hamburger {
-    constructor(size, stuffing) {
-        this.size = size;
-        this.stuffing = stuffing;     
+  constructor(size, stuffing) {
+    this.order = new Set();
+    this.order.add(size);
+    this.order.add(stuffing);     
+  }
+
+  static SIZE_SMALL = {
+    price: 50,
+    calories: 20,
+  };
+  
+  static SIZE_BIG = {
+    price: 100,
+    calories: 40,
+  };
+  
+  static STUFFING_CHEESE = {
+    price: 10,
+    calories: 20,
+  };
+  
+  static STUFFING_SALAD = {
+    price: 20,
+    calories: 5,
+  };
+  
+  static STUFFING_FRY = {
+    price: 15,
+    calories: 10,
+  };
+  
+  static TOPPING_MAYO = {
+    price: 20,
+    calories: 5,
+  };
+  
+  static TOPPING_SPICE = {
+    price: 15,
+    calories: 0,
+  };
+
+  addTopping(topping) {
+    this.order.add(topping);
+  }
+
+  addStuffing(stuffing) {
+    this.order.add(stuffing);
+  }
+
+  deleteItem(item) {
+    this.order.delete(item);
+  }
+
+  calculatePrice() {
+    let totalPrice = null;
+
+    for ( let key of this.order) {
+      totalPrice += key.price;
     }
 
-    static price = {
-        small: 50,
-        big: 100,
-        cheese: 10,
-        french_fry: 15,
-        salat: 20,
-        mayo: 20,
-        spice: 15,
-        [Symbol.iterator]: function () {
-            var keys = Object.keys(this).sort();
-            var index = 0;
-            
-            return {
-              next: function () {
-                return {
-                  value: keys[index], done: index++ >= keys.length
-                };
-              }
-            }
-        }
+    return "Price: " + totalPrice + ' тугриков';
+  }
+
+  calculateCalories() {
+    let totalCalories = null;
+
+    for ( let key of this.order) {
+      totalCalories += key.calories;
     }
 
-    static calories = {
-        small: 20,
-        big: 40,
-        cheese: 20,
-        french_fry: 10,
-        salat: 5,
-        mayo: 5,
-        spice: 0,
-        [Symbol.iterator]: function () {
-            var keys = Object.keys(this).sort();
-            var index = 0;
-            
-            return {
-              next: function () {
-                return {
-                  value: keys[index], done: index++ >= keys.length
-                };
-              }
-            }
-        }
-    }
-
-    static size = {
-        small: "small",
-        big: "big",
-    }
-
-    static stuffing = {
-        cheese: "cheese",
-        french_fry: "french Fry",
-        salat: "salat",
-
-    }
-
-    static topping = {
-        mayo: "mayo",
-        spice: "spice",
-    }
-
-    addTopping(topping) {
-        this.topping = topping;
-    }
-
-    calculatePrice() { 
-        let totalPrice = 0; 
-        this[Symbol.iterator] = function () {
-            var keys = Object.keys(this).sort();
-            var index = 0;
-            
-            return {
-              next: function () {
-                return {
-                  value: keys[index], done: index++ >= keys.length
-                };
-              }
-            }
-          }
-        for (let key of this) {
-            for (let ingredient of Hamburger.price) {
-                if (this[key] === ingredient) {
-                    totalPrice += Hamburger.price[ingredient];
-                }
-            }         
-        }
-        return totalPrice + ' тугриков';
-    }
-
-    calculateCalories() { 
-        let totalCalories = null; 
-        this[Symbol.iterator] = function () {
-            var keys = Object.keys(this).sort();
-            var index = 0;
-            
-            return {
-              next: function () {
-                return {
-                  value: keys[index], done: index++ >= keys.length
-                };
-              }
-            }
-          }
-        for (let key of this) {
-            for (let ingredient of Hamburger.calories) {
-                if (this[key] === ingredient) {
-                    totalCalories += Hamburger.calories[ingredient];
-                }
-            }         
-        }
-        return totalCalories + ' калорий';
-    }
+    return "Calories: " + totalCalories + ' калорий';
+  }
 }
 
-let hamburger = new Hamburger(Hamburger.size.small, Hamburger.stuffing.cheese);
+let hamburger = new Hamburger(Hamburger.SIZE_SMALL, Hamburger.STUFFING_CHEESE);
 
-console.log("Price: " + hamburger.calculatePrice());
-console.log("Calories: " + hamburger.calculateCalories());
-hamburger.addTopping(Hamburger.topping.mayo);
-console.log("Price: " + hamburger.calculatePrice());
-console.log("Calories: " + hamburger.calculateCalories());
+console.log(hamburger.calculatePrice());
+console.log(hamburger.calculateCalories());
+
+hamburger.addTopping(Hamburger.TOPPING_MAYO);
+console.log(hamburger.calculatePrice());
+console.log(hamburger.calculateCalories());
+
+hamburger.deleteItem(Hamburger.STUFFING_CHEESE);
+hamburger.addStuffing(Hamburger.STUFFING_FRY);
+hamburger.addStuffing(Hamburger.STUFFING_SALAD);
+console.log(hamburger.calculatePrice());
+console.log(hamburger.calculateCalories());
